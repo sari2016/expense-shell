@@ -57,7 +57,7 @@ systemctl start backend &>>$log_file
 stat_check
 echo Install MYSQL Client
 dnf install mysql -y
-stst_check
+stat_check
 
 echo load schema
 mysql -h mysql.saritag.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
