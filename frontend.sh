@@ -6,11 +6,11 @@ dnf install nginx -y &>>$log_file
 stat_check
 
 echo Placing Expense Config File in Nginx
-cp expense.conf /etc/nginx/default.d/expense.conf &&>>$log_file
+cp expense.conf /etc/nginx/default.d/expense.conf &>>$log_file
 stst_check
 
 echo Removeing old Nginx Content
-rm -rf /usr/share/nginx/html/* &&>>$log_file
+rm -rf /usr/share/nginx/html/* &>>$log_file
 stst_check
 
 
@@ -18,6 +18,6 @@ cd /usr/share/nginx/html
 
 download_and_extract
 echo starting Nginx Service
-systemctl enable nginx &&>>$log_file
-systemctl restart nginx &&>>$log_file
+systemctl enable nginx &>>$log_file
+systemctl restart nginx &>>$log_file
 stat_check
