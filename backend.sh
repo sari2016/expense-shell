@@ -1,17 +1,59 @@
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
-dnf install nodejs -y
-cp backend.service /etc/systemd/system/backend.service
+source common.sh
+component=backend
 
-useradd expense
-rm -rf /app
+echo Install NodeJS Repos
+curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$log_file
+
+if [ $? -eq 0 ]; then
+  echo SUCCESS
+  else
+    echo FAILED
+    fi
+
+    echo Install NodeJS
+dnf install nodejs -y &>>$log_file
+if [ $? -eq 0 ]; then
+  echo SUCCESS
+  else
+    echo FAILED
+    fi
+
+    echo copy Backend Service File
+cp backend.service /etc/systemd/system/backend.service &>>$log_file
+
+if [ $? -eq 0 ]; then
+  echo SUCCESS
+  else
+    echo FAILED
+    fi
+
+echo Add Application User
+useradd expense &>>$log_file
+if [ $? -eq 0 ]; then
+  echo SUCCESS
+  else
+    echo FAILED
+    fi
+echo Clean App Content
+rm -rf /app &>>$log_file
 mkdir /app
-curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip
+
+echo Download App Content
+
+curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip &>>$log_file
 cd /app
-unzip /tmp/backend.zip
+
+echo Extract App Content
+unzip /tmp/backend.zip &>>$log_file
+
+echo Download Dependencies
 cd /app
-npm install
-systemctl daemon-reload
-systemctl enable backend
-systemctl start backend
+npm install &>>$log_file
+
+echo Start Backend Service
+systemctl daemon-reload &>>$log_file
+systemctl enable backend &>>$log_file
+systemctl start backend &>>$log_file
+
+echo Install MYSQL Client
 dnf install mysql -y
-mysql -h backend.saritag.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
