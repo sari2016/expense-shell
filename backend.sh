@@ -39,7 +39,7 @@ stat_check
 
 echo Download Dependencies
 cd /app
-npm install &>>$log_file
+npm install &&>>$log_file
 stat_check
 
 echo Start Backend Service
